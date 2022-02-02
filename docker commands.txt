@@ -1,0 +1,22 @@
+
+# Compile Java Application
+docker run --rm -v $PWD:/app -w /app chinkesh/spring-maven-jdk8 javac Main.java
+
+# Run Java Application
+docker run --rm -v $PWD:/app -w /app chinkesh/spring-maven-jdk8 java Main
+
+# Create Maven Project
+docker run -it --rm -v "$PWD":/app -w /app chinkesh/spring-maven-jdk8 mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -Dinte
+
+#Build Maven Project
+docker run -it --rm -v "$PWD":/app -w /app chinkesh/spring-maven-jdk8 mvn package
+
+# Run Maven Project
+docker run -it --rm -v "$PWD":/app -w /app chinkesh/spring-maven-jdk8 java -cp target/my-app-1.0-SNAPSHOT.jar com.mycompany.app.App
+
+# Build War file
+docker run -it --rm -v "$PWD":/app -w /app chinkesh/spring-maven-jdk8 mvn clean install
+
+# Deploy war file
+docker run -it -d --name spring -p 8080:8080 -v "$PWD":/app chinkesh/spring-maven-jdk8 bash -c "cp /app/target/springwebapp.war /tomcat/webapps/ & /tomcat/bin/catalina.sh run"
+
